@@ -1,5 +1,7 @@
 package com.containers;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.lang.ref.*;
 import java.util.LinkedList;
 
@@ -58,7 +60,7 @@ class VeryBig {
 				pa.add(new PhantomReference<VeryBig>(
 						new VeryBig("Phantom " + i), rq));
 				System.out.println("Just created: " + pa.getLast());
-				checkQueue();
+				checkQueue();Reader
 			}
 		}
 	} /* (Execute to see output) */// :~

@@ -12,7 +12,7 @@ public class FormattedMemoryInput {
 					.read("/Users/anandran/workspace/thinkinginjavasamples/src/com/io/FormattedMemoryInput.java")
 					.getBytes()));
 			while (true) {
-				System.out.println(in.readByte());
+				System.out.print((char)in.readByte());
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

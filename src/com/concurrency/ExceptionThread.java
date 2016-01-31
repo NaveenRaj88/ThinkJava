@@ -1,5 +1,7 @@
 package com.concurrency;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class ExceptionThread implements Runnable{
@@ -8,7 +10,6 @@ public class ExceptionThread implements Runnable{
 	public void run() {
 		try {
 			TimeUnit.SECONDS.sleep(1);
-			
 			throw new RuntimeException();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -17,13 +18,13 @@ public class ExceptionThread implements Runnable{
 	}
 	
 	public static void main(String[] args) {
-//		ExecutorService exec = Executors.newCachedThreadPool();
-//		exec.execute(new ExceptionThread());
+		Executor exec = Executors.newCachedThreadPool();
+		exec.execute(new ExceptionThread());
 		
-			Thread t = new Thread(new ExceptionThread());
-			MyExceptionHandler m = new MyExceptionHandler();
-			t.setUncaughtExceptionHandler(m);
-			t.start();
+//			Thread t = new Thread(new ExceptionThread());
+//			MyExceptionHandler m = new MyExceptionHandler();
+//			t.setUncaughtExceptionHandler(m);
+//			t.start();
 		
 		
 	}

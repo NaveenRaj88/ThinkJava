@@ -57,13 +57,13 @@ class Blocked3 implements Runnable {
 
 public class InterruptingIdiom {
 	public static void main(String[] args) throws Exception {
-		if (args.length != 1) {
-			print("usage: java InterruptingIdiom delay-in-mS");
-			System.exit(1);
-		}
+//		if (args.length != 1) {
+//			print("usage: java InterruptingIdiom delay-in-mS");
+//			System.exit(1);
+//		}
 		Thread t = new Thread(new Blocked3());
 		t.start();
-		TimeUnit.MILLISECONDS.sleep(new Integer(args[0]));
+		TimeUnit.MILLISECONDS.sleep(1000);
 		t.interrupt();
 	}
 }

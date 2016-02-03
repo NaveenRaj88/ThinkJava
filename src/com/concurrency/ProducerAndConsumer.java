@@ -7,13 +7,21 @@ import java.util.concurrent.TimeUnit;
 class Factory {
 	private String product;
 
-	public synchronized String getProduct() {
+	public synchronized String getProduct() throws InterruptedException {
+		while(product == null){
+			notify();
+			wait();
+		}
 		String productTemp = product;
 		product = null;
 		return productTemp;
 	}
 
-	public synchronized void setProduct(String product) {
+	public synchronized void setProduct(String product) throws InterruptedException {
+		while(this.product != null){
+			notify();
+			wait();
+		}
 		this.product = product;
 	}
 
@@ -30,13 +38,10 @@ class Consumer implements Runnable {
 	public void run() {
 		try {
 			while (!Thread.interrupted()) {
-				System.out.println("starting to consume");
 				System.out.println("consumed " + factory.getProduct());
-				factory.wait();
-				notifyAll();
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("exiting via interrupt");
 		}
 	}
 }
@@ -52,14 +57,11 @@ class Producer implements Runnable {
 	public void run() {
 		try {
 			while(!Thread.interrupted()){
-				System.out.println("starting to produce");
+				System.out.println("producing");
 				factory.setProduct(Double.toString(Math.random()));
-				System.out.println("produced ");
-				factory.wait();
-				notifyAll();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("exiting via interrupt");
 		}
 	}
 }
@@ -71,8 +73,8 @@ public class ProducerAndConsumer {
 		ExecutorService ex = Executors.newCachedThreadPool();
 		ex.execute(new Producer(factory));
 		ex.execute(new Consumer(factory));
-		TimeUnit.SECONDS.sleep(6);
-		ex.shutdown();
+		TimeUnit.SECONDS.sleep(2);
+		ex.shutdownNow();
 	}
 
 }

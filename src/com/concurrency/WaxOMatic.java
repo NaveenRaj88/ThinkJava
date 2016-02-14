@@ -5,28 +5,26 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 class Car {
-	private boolean waxOn;
+	private boolean waxOn = false;
 
 	public synchronized void waxed() {
 		waxOn = true;
-//		notifyAll();
-		notify();
+		notifyAll();
 	}
 
 	public synchronized void buffed() {
 		waxOn = false;
-//		notifyAll();
-		notify();
+		notifyAll();
 	}
 
 	public synchronized void waitForWaxing() throws InterruptedException {
-		if (waxOn == false) {
+		while (!waxOn) {
 			wait();
 		}
 	}
 
 	public synchronized void waitForBuffing() throws InterruptedException {
-		if (waxOn == true) {
+		while (waxOn) {
 			wait();
 		}
 	}
@@ -42,16 +40,17 @@ class WaxOn implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while (!Thread.interrupted()) {
-				System.out.println("Wax On!");
-				TimeUnit.MILLISECONDS.sleep(200);
+			while (true) {
+				System.out.println("waxing the car");
+				TimeUnit.MILLISECONDS.sleep(20);
 				car.waxed();
 				car.waitForBuffing();
 			}
-		} catch (InterruptedException ex) {
-			System.out.println("exiting via interrupt");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Exiting via interrupt");
 		}
-
+		System.out.println("Ending waxing task");
 	}
 }
 
@@ -65,17 +64,19 @@ class WaxOff implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while (!Thread.interrupted()) {
+			while (true) {
 				car.waitForWaxing();
-				System.out.println("Wax Off!");
-				TimeUnit.MILLISECONDS.sleep(200);
+				System.out.println(" buffing the car");
+				TimeUnit.MILLISECONDS.sleep(20);
 				car.buffed();
+				
 			}
 		} catch (InterruptedException e) {
-			System.out.println("exiting via interrupted exception");
+			// TODO Auto-generated catch block
+			System.out.println("Exiting via interrupt");
 		}
+		System.out.println("Ending buffing task");
 	}
-
 }
 
 public class WaxOMatic {
@@ -84,7 +85,7 @@ public class WaxOMatic {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		executor.execute(new WaxOn(car));
 		executor.execute(new WaxOff(car));
-		TimeUnit.MILLISECONDS.sleep(2000);
+		TimeUnit.SECONDS.sleep(5);
 		executor.shutdownNow();
 	}
 }

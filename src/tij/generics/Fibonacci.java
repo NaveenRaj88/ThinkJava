@@ -17,6 +17,6 @@ public class Fibonacci {
 	}
 	
 	public static void main(String[] args) {
-		new Fibonacci().fibIt(20);
+		new Fibonacci().fibIt(3);
 	}
 }

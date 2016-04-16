@@ -15,7 +15,7 @@ public class FloatAndDoubleDataTypes {
 		System.out.println(Math.sqrt(-d) == Double.NaN);
 		System.out.println(Double.isNaN(Math.sqrt(-d)));
 		
-		
+		int i =10;
 		
 	}
 }
